@@ -1,6 +1,6 @@
 import { useParams, useRouteMatch } from "react-router-dom";
 import { shouldUseCustomHook, shouldUseRouteMatch } from "./useCustomHook";
-import { useRouteMatchParams } from "./useRouteParameters";
+import { useRouteMatchParams } from "./useRouteMatchParams";
 
 function usePeopleIdParam(): { peopleId: string } {
   return useParams();
