@@ -9,7 +9,7 @@ export function HookSelect() {
     setValue(newValue);
     localStorage.setItem("hookType", newValue);
 
-    window.location.href = "/";
+    window.location.reload();
   }
 
   return (
