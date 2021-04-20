@@ -1,5 +1,6 @@
 {
   "name": "react-router-star-wars",
+  "homepage": "https://kfiku.github.io/react-router-star-wars",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -21,7 +22,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "lint": "prettier --write src"
+    "lint": "prettier --write src",
+    "page": "npm run build && git add ./build && git commit -m \"update gh-page\" && git subtree push --prefix build origin gh-pages"
   },
   "eslintConfig": {
     "extends": [

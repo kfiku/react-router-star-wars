@@ -4,7 +4,7 @@ import { HookSelect } from "./HookSelect";
 
 export default function App() {
   return (
-    <Router>
+    <Router basename="/react-router-star-wars">
       <Switch>
         <Route path="/">
           <HookSelect />
