@@ -1,79 +1,53 @@
-import { useEffect, useState, useRef } from "react";
-import { matchPath, useHistory, match } from "react-router-dom";
-import { Location } from "history";
+import { useEffect, useState, useRef } from 'react';
+import { Location } from 'history';
+import { matchPath, useHistory } from 'react-router-dom';
 
-export type Parameters = Record<string, string>;
+export type Params = Record<string, string>;
 
-export function useRouteMatchParams(
-  route: string,
-  parameters?: string[]
-): Parameters {
+export function useRouteMatchParams<TParams extends Params>(route: string, parameters?: string[]): TParams {
   const history = useHistory();
-  const parametersRef = useRef<Parameters>({});
-  const initialParameters = getParameters(history.location, route, parameters);
-  const [currentParameters, setCurrentParameters] = useState(initialParameters);
+  const initialParameters = getParams<TParams>(history.location.pathname, route, parameters);
+  const parametersRef = useRef<TParams>(initialParameters);
+  const [currentParams, setCurrentParams] = useState(initialParameters);
 
   useEffect(() => {
-    const unListen = history.listen((location) => {
-      const newParameters = getParameters(location, route, parameters);
+    const unsubscribe = history.listen((location: Location): void => {
+      const newParameters = getParams<TParams>(location.pathname, route, parameters);
 
       if (parametersHasChanged(newParameters, parametersRef.current)) {
         parametersRef.current = newParameters;
-        setCurrentParameters(newParameters);
+        setCurrentParams(newParameters);
       }
     });
-    return () => unListen();
-  }, [history, parametersRef, setCurrentParameters, parameters, route]);
 
-  return currentParameters;
+    return () => unsubscribe();
+  }, [history, parametersRef, setCurrentParams, parameters, route]);
+
+  return currentParams;
 }
 
-function getParameters(
-  location: Location<unknown>,
-  route: string,
-  parameters?: string[]
-): Parameters {
-  const matched: match<Parameters> | null = matchPath<Parameters>(
-    location.pathname,
-    {
-      path: route,
+function getParams<TParams extends Params>(pathname: string, route: string, parameters?: string[]): TParams {
+  const matched = matchPath<TParams>(pathname, route);
+  const params = parameters || (matched ? Object.keys(matched.params) : []);
+
+  return params.reduce((accumulator: TParams, parameter: string): TParams => {
+    const matchedParameter = matched?.params[parameter];
+
+    if (matchedParameter) {
+      return Object.assign(accumulator, { [parameter]: matchedParameter });
     }
-  );
 
-  const params =
-    parameters || (matched?.params ? Object.keys(matched.params) : []);
-
-  const matchedParameters = params.reduce(
-    (accumulator: Parameters, parameter): Parameters => {
-      const matchedParameter = matched?.params?.[parameter];
-      if (matchedParameter) {
-        const newAcc = { ...accumulator, [parameter]: matchedParameter };
-
-        return newAcc;
-      }
-
-      return accumulator;
-    },
-    {}
-  );
-
-  return matchedParameters;
+    return accumulator;
+  }, {} as TParams);
 }
 
-function parametersHasChanged(
-  newParameters: Parameters,
-  oldParameters: Parameters
-): boolean {
-  const newParametersKeys = Object.keys(newParameters);
-  const oldParametersKeys = Object.keys(oldParameters);
+function parametersHasChanged(newParams: Params, oldParams: Params): boolean {
+  const newParamsKeys = Object.keys(newParams);
+  const oldParamsKeys = Object.keys(oldParams);
 
-  if (newParametersKeys.length !== oldParametersKeys.length) {
+  if (newParamsKeys.length !== oldParamsKeys.length) {
     return true;
   }
 
-  const diff = newParametersKeys.filter((parameter) => {
-    return newParameters[parameter] !== oldParameters?.[parameter];
-  });
-
-  return diff.length > 0;
+  return newParamsKeys.some((parameter: string) => newParams[parameter] !== oldParams[parameter]);
 }
