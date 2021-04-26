@@ -1,8 +1,8 @@
 import { Switch, Route, Link } from "react-router-dom";
+
 import useFilmIdParam from "./hooks/useFilmIdParam";
 import usePeopleIdParam from "./hooks/usePeopleIdParam";
 import { useFetch } from "./hooks/useFetch";
-import { memo } from "react";
 
 export function Peoples({ peoples }: { peoples: string[] }) {
   return (
@@ -17,7 +17,7 @@ export function Peoples({ peoples }: { peoples: string[] }) {
       </div>
       <Switch>
         <Route path="/film/:filmId/peoples/:peopleId">
-          <PeopleDetailMemo />
+          <PeopleDetail />
         </Route>
       </Switch>
     </div>
@@ -64,8 +64,6 @@ function PeopleDetail() {
     </div>
   );
 }
-
-const PeopleDetailMemo = memo(PeopleDetail);
 
 function getPeopleIdFromUrl(url: string) {
   return url.split("people/")[1].split("/")[0];

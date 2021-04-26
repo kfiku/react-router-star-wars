@@ -1,4 +1,3 @@
-import { memo } from "react";
 import { Switch, Route, Link } from "react-router-dom";
 
 import { Peoples } from "./Peoples";
@@ -17,7 +16,7 @@ function useFilms() {
   };
 }
 
-function FilmsList() {
+export function FilmsList() {
   const { films, isLoading } = useFilms();
 
   console.log("RENDER FilmsList", isLoading ? "isLoading" : "");
@@ -38,14 +37,12 @@ function FilmsList() {
       </div>
       <Switch>
         <Route path="/film/:filmId">
-          <FilmMemo />
+          <Film />
         </Route>
       </Switch>
     </div>
   );
 }
-
-export const FilmListMemo = memo(FilmsList);
 
 function FilmElement({ film }: { film: FilmType }) {
   return (
@@ -89,8 +86,6 @@ export function Film(): JSX.Element {
     </div>
   );
 }
-
-const FilmMemo = memo(Film);
 
 function useFilm(id: string) {
   const { data, isLoading } = useFetch(`https://swapi.dev/api/films/${id}/`);

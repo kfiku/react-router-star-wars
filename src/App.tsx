@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import { FilmListMemo } from "./Films";
+import { FilmsList } from "./Films";
 import { HookSelect } from "./HookSelect";
 
 export default function App() {
@@ -8,7 +8,7 @@ export default function App() {
       <Switch>
         <Route path="/">
           <HookSelect />
-          <FilmListMemo />
+          <FilmsList />
         </Route>
       </Switch>
     </Router>

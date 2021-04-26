@@ -1,8 +1,8 @@
 import { Switch, Route, Link } from "react-router-dom";
+
 import useFilmIdParam from "./hooks/useFilmIdParam";
 import usePlanetIdParam from "./hooks/usePlanetIdParam";
 import { useFetch } from "./hooks/useFetch";
-import { memo } from "react";
 
 export function Planets({ planets }: { planets: string[] }) {
   return (
@@ -17,7 +17,7 @@ export function Planets({ planets }: { planets: string[] }) {
       </div>
       <Switch>
         <Route path="/film/:filmId/planets/:planetId">
-          <PlanetDetailMemo />
+          <PlanetDetail />
         </Route>
       </Switch>
     </div>
@@ -51,8 +51,6 @@ function PlanetDetail() {
     </div>
   );
 }
-
-const PlanetDetailMemo = memo(PlanetDetail);
 
 function getPlanetIdFromUrl(url: string) {
   return url.split("planets/")[1].split("/")[0];
